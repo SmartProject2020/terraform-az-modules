@@ -19,7 +19,7 @@ data "azurerm_subnet" "existing" {
 
 resource "azurerm_network_security_group" "this" {
   name                = var.nsg_name
-  location            = var.location
+  location            = data.azurerm_resource_group.vnet_rg.location
   resource_group_name = data.azurerm_resource_group.vnet_rg.name
 
   dynamic "security_rule" {

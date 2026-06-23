@@ -32,11 +32,6 @@ variable "nsg_name" {
   type        = string
 }
 
-variable "location" {
-  description = "Region Azure du Network Security Group"
-  type        = string
-}
-
 # ==============================================================================
 # Variables optionnelles
 # ==============================================================================
