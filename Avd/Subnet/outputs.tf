@@ -22,3 +22,8 @@ output "network_security_group_name" {
   description = "Nom du Network Security Group associe au subnet"
   value       = azurerm_network_security_group.this.name
 }
+
+output "vnet_location" {
+  description = "Region Azure du VNET (= region des VMs/NICs qui doivent etre dans le meme region que le subnet)"
+  value       = data.azurerm_resource_group.vnet_rg.location
+}
