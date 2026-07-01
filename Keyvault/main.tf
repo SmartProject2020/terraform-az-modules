@@ -13,7 +13,7 @@ resource "azurerm_key_vault" "keyvault" {
   soft_delete_retention_days      = 7
   purge_protection_enabled        = true
   public_network_access_enabled   = false
-  enable_rbac_authorization       = true
+  rbac_authorization_enabled      = true
   enabled_for_deployment          = false
   enabled_for_disk_encryption     = false
   enabled_for_template_deployment = false
@@ -24,4 +24,9 @@ resource "azurerm_key_vault" "keyvault" {
   }
  
   tags = local.common_tags
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes  = [tags, soft_delete_retention_days, purge_protection_enabled]
+  }
 }

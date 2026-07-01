@@ -47,6 +47,14 @@ resource "azurerm_storage_account" "storage_account" {
     }
   }
 
+  dynamic "azure_files_authentication" {
+    for_each = var.enable_aadkerb ? [1] : []
+    content {
+      directory_type                 = "AADKERB"
+      default_share_level_permission = var.aadkerb_default_share_permission
+    }
+  }
+
   network_rules {
     default_action             = var.network_rules_action
     bypass                     = ["AzureServices"]
@@ -54,4 +62,9 @@ resource "azurerm_storage_account" "storage_account" {
   }
 
   tags = local.common_tags
+
+  lifecycle {
+    # prevent_destroy = true
+    ignore_changes  = [network_rules]
+  }
 }

@@ -13,14 +13,9 @@ output "subnet_address_prefix" {
   value       = local.next_cidr
 }
 
-output "network_security_group_id" {
-  description = "ID du Network Security Group associe au subnet"
-  value       = azurerm_network_security_group.this.id
-}
-
-output "network_security_group_name" {
-  description = "Nom du Network Security Group associe au subnet"
-  value       = azurerm_network_security_group.this.name
+output "route_table_id" {
+  description = "ID de la Route Table associee au subnet"
+  value       = data.azurerm_route_table.this.id
 }
 
 output "vnet_location" {

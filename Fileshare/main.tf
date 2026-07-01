@@ -21,4 +21,8 @@ resource "azurerm_storage_share" "share" {
   name               = each.value
   storage_account_id = var.storage_account_id
   quota              = var.quota_gb
+
+  lifecycle {
+    # prevent_destroy = true
+  }
 }

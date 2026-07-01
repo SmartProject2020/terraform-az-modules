@@ -109,3 +109,15 @@ variable "APPLICATION_ID" {
   type        = string
   default     = ""
 }
+
+variable "enable_aadkerb" {
+  description = "Activer l authentification Kerberos Azure AD (AADKERB) pour Azure Files"
+  type        = bool
+  default     = false
+}
+
+variable "aadkerb_default_share_permission" {
+  description = "Permission par defaut pour tous les utilisateurs Entra ID authentifies sur les fileshares (AADKERB uniquement). Valeurs : None, StorageFileDataSmbShareReader, StorageFileDataSmbShareContributor, StorageFileDataSmbShareElevatedContributor"
+  type        = string
+  default     = "None"
+}

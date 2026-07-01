@@ -3,7 +3,7 @@
 # ==============================================================================
 
 variable "resource_group_name" {
-  description = "Nom du Resource Group contenant le VNET cible (lookup SETTING+NETWORK_ZONE, cf. root HostPool)"
+  description = "Nom du Resource Group contenant le VNET et la Route Table (lookup SETTING+NETWORK_ZONE, cf. root HostPool)"
   type        = string
 }
 
@@ -27,8 +27,8 @@ variable "subnet_name" {
   type        = string
 }
 
-variable "nsg_name" {
-  description = "Nom du Network Security Group associe au subnet"
+variable "route_table_name" {
+  description = "Nom de la Route Table pre-existante a associer au subnet (geree par l equipe reseau)"
   type        = string
 }
 
@@ -46,30 +46,4 @@ variable "excluded_cidrs" {
   EOT
   type        = list(string)
   default     = []
-}
-
-variable "extra_security_rules" {
-  description = <<-EOT
-    Regles NSG additionnelles ("flux metier", HLD section 9.5.2), ajoutees en
-    complement des regles "flux standard" (HLD section 9.5.1) appliquees par
-    defaut par ce module. Meme structure que security_rule (azurerm_network_security_group).
-  EOT
-  type = list(object({
-    name                       = string
-    priority                   = number
-    direction                  = string
-    access                     = string
-    protocol                   = string
-    source_port_range          = string
-    destination_port_range     = string
-    source_address_prefix      = string
-    destination_address_prefix = string
-  }))
-  default = []
-}
-
-variable "tags" {
-  description = "Tags appliques au NSG (les subnets Azure ne supportent pas les tags)"
-  type        = map(string)
-  default     = {}
 }

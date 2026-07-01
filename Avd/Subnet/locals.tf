@@ -29,46 +29,4 @@ locals {
   # address_prefixes ; si available_cidrs est vide, le lifecycle.precondition
   # de azurerm_subnet.this bloque le plan avec un message explicite.
   next_cidr = local.existing_self_subnet != null ? local.existing_self_subnet.address_prefixes[0] : coalesce(try(local.available_cidrs[0], null), "0.0.0.0/32")
-
-  # "Flux Standard" (HLD section 9.5.1) : regles NSG par defaut applicables a
-  # tous les Host Pools. Les NSG ne filtrent pas par FQDN (contrairement a un
-  # firewall) : les FQDN du document HLD sont traduits ici via les service tags
-  # Azure les plus proches.
-  default_security_rules = [
-    {
-      name                       = "AllowAvdCoreServicesOutbound"
-      priority                   = 100
-      direction                  = "Outbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "443"
-      source_address_prefix      = "*"
-      destination_address_prefix = "AzureCloud"
-    },
-    {
-      name                       = "AllowRdpShortpathOutbound"
-      priority                   = 110
-      direction                  = "Outbound"
-      access                     = "Allow"
-      protocol                   = "Udp"
-      source_port_range          = "*"
-      destination_port_range     = "3478"
-      source_address_prefix      = "*"
-      destination_address_prefix = "Internet"
-    },
-    {
-      name                       = "AllowCertificateValidationOutbound"
-      priority                   = 120
-      direction                  = "Outbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "80"
-      source_address_prefix      = "*"
-      destination_address_prefix = "Internet"
-    }
-  ]
-
-  security_rules = concat(local.default_security_rules, var.extra_security_rules)
 }

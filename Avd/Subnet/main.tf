@@ -17,27 +17,10 @@ data "azurerm_subnet" "existing" {
   resource_group_name  = data.azurerm_resource_group.vnet_rg.name
 }
 
-resource "azurerm_network_security_group" "this" {
-  name                = var.nsg_name
-  location            = data.azurerm_resource_group.vnet_rg.location
+# Route table pre-existante (geree par l'equipe reseau, pas par ce module)
+data "azurerm_route_table" "this" {
+  name                = var.route_table_name
   resource_group_name = data.azurerm_resource_group.vnet_rg.name
-
-  dynamic "security_rule" {
-    for_each = local.security_rules
-    content {
-      name                       = security_rule.value.name
-      priority                   = security_rule.value.priority
-      direction                  = security_rule.value.direction
-      access                     = security_rule.value.access
-      protocol                   = security_rule.value.protocol
-      source_port_range          = security_rule.value.source_port_range
-      destination_port_range     = security_rule.value.destination_port_range
-      source_address_prefix      = security_rule.value.source_address_prefix
-      destination_address_prefix = security_rule.value.destination_address_prefix
-    }
-  }
-
-  tags = var.tags
 }
 
 resource "azurerm_subnet" "this" {
@@ -54,7 +37,7 @@ resource "azurerm_subnet" "this" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "this" {
-  subnet_id                 = azurerm_subnet.this.id
-  network_security_group_id = azurerm_network_security_group.this.id
+resource "azurerm_subnet_route_table_association" "this" {
+  subnet_id      = azurerm_subnet.this.id
+  route_table_id = data.azurerm_route_table.this.id
 }
