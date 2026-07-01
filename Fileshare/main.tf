@@ -13,6 +13,9 @@ locals {
     for name in var.fileshares :
     name => lower("${var.APPLICATION_ID}-${name}")
   }
+
+  # Premium FileStorage impose un minimum de 100 GiB par fileshare
+  effective_quota_gb = max(var.quota_gb, 100)
 }
 
 resource "azurerm_storage_share" "share" {
@@ -20,7 +23,7 @@ resource "azurerm_storage_share" "share" {
 
   name               = each.value
   storage_account_id = var.storage_account_id
-  quota              = var.quota_gb
+  quota              = local.effective_quota_gb
 
   lifecycle {
     # prevent_destroy = true
