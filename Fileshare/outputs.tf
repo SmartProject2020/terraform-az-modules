@@ -16,3 +16,8 @@ output "fileshare_resource_manager_ids" {
   description = "Map des Resource Manager IDs des fileshares (utilises pour le AD join)"
   value       = { for k, v in azurerm_storage_share.share : k => v.resource_manager_id }
 }
+
+output "fileshare_urls" {
+  description = "Map des URLs des fileshares (utilises pour azurerm_storage_share_directory)"
+  value       = { for k, v in azurerm_storage_share.share : k => v.url }
+}
