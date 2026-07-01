@@ -68,6 +68,12 @@ variable "is_manual_connection" {
   description = "Détermine si la connexion privée est manuelle"
 }
 
+variable "custom_network_interface_name" {
+  type        = string
+  default     = null
+  description = "Nom personnalise de la NIC du Private Endpoint (ex: EM50-NPR-TEST-NIC01). Null = nom auto Azure."
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}

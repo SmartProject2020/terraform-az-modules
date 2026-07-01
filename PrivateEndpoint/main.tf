@@ -36,10 +36,11 @@ data "azurerm_resource_group" "rg_private_endpoint" {
 }
 
 resource "azurerm_private_endpoint" "endpoint" {
-  name                = var.endpoint_name
-  location            = data.azurerm_resource_group.rg_private_endpoint.location
-  resource_group_name = data.azurerm_resource_group.rg_private_endpoint.name
-  subnet_id           = data.azurerm_subnet.subnet.id
+  name                          = var.endpoint_name
+  location                      = data.azurerm_resource_group.rg_private_endpoint.location
+  resource_group_name           = data.azurerm_resource_group.rg_private_endpoint.name
+  subnet_id                     = data.azurerm_subnet.subnet.id
+  custom_network_interface_name = var.custom_network_interface_name
 
   private_dns_zone_group {
     name                 = local.dns_names[var.resource_type]
