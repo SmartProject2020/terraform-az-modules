@@ -7,6 +7,11 @@ variable "resource_group_name" {
   description = "Nom du groupe de ressources où sera créé le Private Endpoint"
 }
 
+variable "location" {
+  type        = string
+  description = "Region Azure du Private Endpoint"
+}
+
 variable "resource_group_name_vnet" {
   type        = string
   description = "Nom du groupe de ressources où sera créé le Private Endpoint"

@@ -1,10 +1,6 @@
-data "azurerm_resource_group" "rg" {
-  name = var.resource_group_name
-}
-
 resource "azurerm_virtual_desktop_host_pool" "this" {
   name                = var.name
-  resource_group_name = data.azurerm_resource_group.rg.name
+  resource_group_name = var.resource_group_name
   location            = var.location
 
   type                             = var.type

@@ -21,24 +21,16 @@ data "azurerm_private_dns_zone" "zone" {
   name     = local.dns_names[var.resource_type]
 }
 
-data "azurerm_resource_group" "rg_vnet" {
-  name = var.resource_group_name_vnet
-}
-
 data "azurerm_subnet" "subnet" {
   name                 = var.subnet_name
   virtual_network_name = var.network_name
-  resource_group_name  = data.azurerm_resource_group.rg_vnet.name
-}
-
-data "azurerm_resource_group" "rg_private_endpoint" {
-  name = var.resource_group_name
+  resource_group_name  = var.resource_group_name_vnet
 }
 
 resource "azurerm_private_endpoint" "endpoint" {
   name                          = var.endpoint_name
-  location                      = data.azurerm_resource_group.rg_private_endpoint.location
-  resource_group_name           = data.azurerm_resource_group.rg_private_endpoint.name
+  location                      = var.location
+  resource_group_name           = var.resource_group_name
   subnet_id                     = data.azurerm_subnet.subnet.id
   custom_network_interface_name = var.custom_network_interface_name
 
@@ -54,7 +46,7 @@ resource "azurerm_private_endpoint" "endpoint" {
     subresource_names              = [var.resource_type]
   }
 
-  tags = merge(data.azurerm_resource_group.rg_private_endpoint.tags, var.tags)
+  tags = var.tags
 
   depends_on = [
     data.azurerm_subnet.subnet,

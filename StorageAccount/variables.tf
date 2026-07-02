@@ -7,6 +7,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "location" {
+  description = "Region Azure du Storage Account"
+  type        = string
+}
+
 variable "storage_account_name" {
   description = "Nom du Storage Account"
   type        = string
