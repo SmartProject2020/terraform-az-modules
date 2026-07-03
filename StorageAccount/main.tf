@@ -13,23 +13,24 @@ data "azurerm_subnet" "selected_network_subnet" {
 }
 
 resource "azurerm_storage_account" "storage_account" {
-  name                            = var.storage_account_name
-  resource_group_name             = var.resource_group_name
-  location                        = var.location
-  account_tier                    = var.storage_account_tier
-  account_kind                    = var.storage_account_kind
-  account_replication_type        = var.storage_account_replication_type
-  access_tier                     = var.storage_account_access_tier
-  min_tls_version                 = "TLS1_2"
-  public_network_access_enabled   = var.public_network_access_enabled
-  https_traffic_only_enabled      = true
-  shared_access_key_enabled       = true
-  default_to_oauth_authentication = true
-  large_file_share_enabled        = local.large_file_share_enabled
-  local_user_enabled              = false
-  sftp_enabled                    = var.sftp_enabled
-  is_hns_enabled                  = var.is_hns_enabled
-  allow_nested_items_to_be_public = false
+  name                              = var.storage_account_name
+  resource_group_name               = var.resource_group_name
+  location                          = var.location
+  account_tier                      = var.storage_account_tier
+  account_kind                      = var.storage_account_kind
+  account_replication_type          = var.storage_account_replication_type
+  access_tier                       = var.storage_account_access_tier
+  min_tls_version                   = "TLS1_2"
+  public_network_access_enabled     = var.public_network_access_enabled
+  https_traffic_only_enabled        = true
+  shared_access_key_enabled         = true
+  default_to_oauth_authentication   = true
+  large_file_share_enabled          = local.large_file_share_enabled
+  local_user_enabled                = false
+  sftp_enabled                      = var.sftp_enabled
+  is_hns_enabled                    = var.is_hns_enabled
+  allow_nested_items_to_be_public   = false
+  provisioned_billing_model_version = var.provisioned_billing_model_version
 
   dynamic "blob_properties" {
     for_each = contains(["StorageV2", "BlobStorage"], var.storage_account_kind) ? [1] : []
@@ -48,6 +49,18 @@ resource "azurerm_storage_account" "storage_account" {
     content {
       directory_type                 = "AADKERB"
       default_share_level_permission = var.aadkerb_default_share_permission
+    }
+  }
+
+  dynamic "share_properties" {
+    for_each = var.storage_account_kind == "FileStorage" ? [1] : []
+    content {
+      retention_policy {
+        days = var.share_soft_delete_days
+      }
+      smb {
+        multichannel_enabled = var.smb_multichannel_enabled
+      }
     }
   }
 

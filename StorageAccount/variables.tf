@@ -126,3 +126,26 @@ variable "aadkerb_default_share_permission" {
   type        = string
   default     = "None"
 }
+
+variable "provisioned_billing_model_version" {
+  description = "Modele de facturation provisionne : null (V1 - capacite seule) ou V2 (IOPS + bande passante + capacite independants). V2 recommande pour Azure Files Premium (AVD/FSLogix)."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.provisioned_billing_model_version == null || var.provisioned_billing_model_version == "V2"
+    error_message = "provisioned_billing_model_version doit etre null (V1) ou V2."
+  }
+}
+
+variable "smb_multichannel_enabled" {
+  description = "Activer SMB Multichannel pour ameliorer les performances avec plusieurs session hosts (FileStorage Premium uniquement)"
+  type        = bool
+  default     = false
+}
+
+variable "share_soft_delete_days" {
+  description = "Retention des fileshares supprimes en soft-delete (jours). Applicable uniquement a FileStorage."
+  type        = number
+  default     = 7
+}

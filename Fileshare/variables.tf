@@ -22,3 +22,15 @@ variable "quota_gb" {
   type        = number
   default     = 100
 }
+
+variable "provisioned_iops" {
+  description = "IOPS provisionnees par fileshare (V2 uniquement). Minimum Azure : 3000. null = V1 (non applicable)."
+  type        = number
+  default     = null
+}
+
+variable "provisioned_bandwidth_mibps" {
+  description = "Bande passante provisionnee par fileshare en MiB/s (V2 uniquement). null = minimum Azure (125 MiB/s a 3000 IOPS)."
+  type        = number
+  default     = null
+}

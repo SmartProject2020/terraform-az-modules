@@ -25,6 +25,10 @@ resource "azurerm_storage_share" "share" {
   storage_account_id = var.storage_account_id
   quota              = local.effective_quota_gb
 
+  # V2 billing model uniquement (null = ignore en V1)
+  provisioned_iops           = var.provisioned_iops
+  provisioned_bandwidth_mibps = var.provisioned_bandwidth_mibps
+
   lifecycle {
     # prevent_destroy = true
   }
