@@ -43,9 +43,14 @@ resource "azurerm_windows_virtual_machine" "this" {
 
   network_interface_ids = [azurerm_network_interface.this[count.index].id]
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = var.os_disk_type
+    disk_size_gb         = var.os_disk_size_gb
   }
 
   source_image_reference {
@@ -72,6 +77,13 @@ resource "azurerm_virtual_machine_extension" "aadlogin" {
   type                       = "AADLoginForWindows"
   type_handler_version       = "2.2"
   auto_upgrade_minor_version = true
+
+  # mdmId = ID d'application Microsoft Intune (constante Microsoft) — declenche
+  # l'enrollment MDM automatique a la jonction Entra ID (TAD section 7 : Intune
+  # exclusif pour les machines Windows 11).
+  settings = var.intune_enrollment_enabled ? jsonencode({
+    mdmId = "0000000a-0000-0000-c000-000000000000"
+  }) : null
 
   tags = local.common_tags
 }

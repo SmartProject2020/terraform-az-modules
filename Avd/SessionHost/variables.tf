@@ -70,6 +70,12 @@ variable "os_disk_type" {
   default     = "Premium_LRS"
 }
 
+variable "os_disk_size_gb" {
+  description = "Taille du disque OS en GiB"
+  type        = number
+  default     = 128
+}
+
 variable "source_image_reference" {
   description = "Image marketplace du Session Host (catalogue Microsoft AVD — TAD section 8.1.1)"
   type = object({
@@ -85,6 +91,12 @@ variable "source_image_reference" {
 # ------------------------------------------------------------------------------
 variable "entra_id_join" {
   description = "Jonction Microsoft Entra ID (alternative au domain join AD classique — TAD 3.3 'Entra ID uniquement')"
+  type        = bool
+  default     = true
+}
+
+variable "intune_enrollment_enabled" {
+  description = "Declenche l'enrollment MDM Intune (mdmId) a la jonction Entra ID — TAD section 7, Intune exclusif pour Windows 11"
   type        = bool
   default     = true
 }
