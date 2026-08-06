@@ -88,6 +88,29 @@ resource "azurerm_virtual_machine_extension" "aadlogin" {
   tags = local.common_tags
 }
 
+# FSLogix — installation agent + configuration Profile Containers (registre).
+# Placee avant l'enregistrement AVD pour beneficier du redemarrage declenche
+# par la configuration DSC "AddSessionHost" (le driver FSLogix a besoin d'un
+# reboot pour se charger correctement).
+resource "azurerm_virtual_machine_extension" "fslogix" {
+  count = var.fslogix_enabled ? var.session_host_count : 0
+
+  name                       = "FSLogixInstall"
+  virtual_machine_id         = azurerm_windows_virtual_machine.this[count.index].id
+  publisher                  = "Microsoft.Compute"
+  type                       = "CustomScriptExtension"
+  type_handler_version       = "1.10"
+  auto_upgrade_minor_version = true
+
+  protected_settings = jsonencode({
+    commandToExecute = "powershell -NonInteractive -NoProfile -ExecutionPolicy Bypass -EncodedCommand ${textencodebase64(local.fslogix_script, "UTF-16LE")}"
+  })
+
+  tags = local.common_tags
+
+  depends_on = [azurerm_virtual_machine_extension.aadlogin]
+}
+
 # Enregistrement du Session Host aupres du Host Pool — agent AVD via extension DSC
 # (token d'enregistrement transmis en protected_settings, jamais logge)
 resource "azurerm_virtual_machine_extension" "avd_registration" {
@@ -117,5 +140,5 @@ resource "azurerm_virtual_machine_extension" "avd_registration" {
 
   tags = local.common_tags
 
-  depends_on = [azurerm_virtual_machine_extension.aadlogin]
+  depends_on = [azurerm_virtual_machine_extension.aadlogin, azurerm_virtual_machine_extension.fslogix]
 }
