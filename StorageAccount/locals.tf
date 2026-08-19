@@ -8,8 +8,9 @@ locals {
   ))
 
   common_tags = {
-    application_id = var.APPLICATION_ID
+    application_id      = var.APPLICATION_ID
     servier_environment = var.servier_environment
-    managed_by     = "terraform"
+    backup_policy       = var.backup_policy
+    managed_by          = "terraform"
   }
 }

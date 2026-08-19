@@ -115,6 +115,12 @@ variable "APPLICATION_ID" {
   default     = ""
 }
 
+variable "backup_policy" {
+  description = "Politique de backup pour le tag (ex: PROD, NOBACKUP)"
+  type        = string
+  default     = ""
+}
+
 variable "enable_aadkerb" {
   description = "Activer l authentification Kerberos Azure AD (AADKERB) pour Azure Files"
   type        = bool
